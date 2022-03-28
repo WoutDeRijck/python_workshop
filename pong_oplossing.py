@@ -24,7 +24,13 @@ paddle_a.penup()
 paddle_a.goto(-350, 0)
 
 # Paddle B
-# TODO
+paddle_b = turtle.Turtle()
+paddle_b.speed(0)
+paddle_b.shape("square")
+paddle_b.color("white")
+paddle_b.shapesize(stretch_wid=5,stretch_len=1)
+paddle_b.penup()
+paddle_b.goto(350, 0)
 
 # Ball
 ball = turtle.Turtle()
@@ -46,25 +52,40 @@ pen.hideturtle()
 pen.goto(0, 260)
 pen.write("Player A: 0  Player B: 0", align="center", font=("Courier", 24, "normal"))
 
-# Tekst met instructie om spel af te sluiten
-# TODO
+# Pen 2
+pen2 = turtle.Turtle()
+pen2.speed(0)
+pen2.shape("square")
+pen2.color("white")
+pen2.penup()
+pen2.hideturtle()
+pen2.goto(0, -280)
+pen2.write("Press q to quit", align="center", font=("Courier", 24, "normal"))
 
 # Functions
 def paddle_a_up():
-    #TODO
-    pass
+    y = paddle_a.ycor()
+    if y < 250:
+        y += 20
+        paddle_a.sety(y)
 
 def paddle_a_down():
-    #TODO
-    pass
+    y = paddle_a.ycor()
+    if y > -250:
+        y -= 20
+        paddle_a.sety(y)
 
 def paddle_b_up():
-    #TODO
-    pass
+    y = paddle_b.ycor()
+    if y < 250:
+        y += 20
+        paddle_b.sety(y)
 
 def paddle_b_down():
-    #TODO
-    pass
+    y = paddle_b.ycor()
+    if y > -250:
+        y -= 20
+        paddle_b.sety(y)
 
 def quit():
     global running
@@ -79,6 +100,7 @@ wn.onkeypress(paddle_b_down, "Down")
 wn.onkeypress(quit, "q")
 
 # Main game loop
+# Extra: laat het balletje sneller gaan
 while running:
     time.sleep(0.005)
     
@@ -108,6 +130,8 @@ while running:
         pen.clear()
         pen.write("Player A: {}  Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
         ball.goto(0, 0)
+        ball.dx = ball.dx / abs(ball.dx)
+        ball.dy = ball.dy / abs(ball.dy)
         ball.dx *= -1
 
     elif ball.xcor() < -400:
@@ -115,15 +139,17 @@ while running:
         pen.clear()
         pen.write("Player A: {}  Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
         ball.goto(0, 0)
+        ball.dx = ball.dx / abs(ball.dx)
+        ball.dy = ball.dy / abs(ball.dy)
         ball.dx *= -1
 
     # Paddle and ball collisions
     if ball.dx < 0 and ball.xcor() < -330 and ball.xcor() > -350 and ball.ycor() < paddle_a.ycor() + 50 and ball.ycor() > paddle_a.ycor() - 50:
-        ball.dx *= -1 
+        ball.dx *= -1.1
         os.system("aplay -q bounce.wav&")
     
     elif ball.dx > 0 and ball.xcor() > 330 and ball.xcor() < 350 and ball.ycor() < paddle_b.ycor() + 50 and ball.ycor() > paddle_b.ycor() - 50:
-        ball.dx *= -1
+        ball.dx *= -1.1
         os.system("aplay -q bounce.wav&")
 
 wn.bye()
